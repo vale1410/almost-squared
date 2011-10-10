@@ -1,0 +1,5 @@
+* set up repository and add basic information [done]
+* finish cp encoding 
+* finish asp encoding
+* write paper 
+* publish 
