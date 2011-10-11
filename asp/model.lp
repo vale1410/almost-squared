@@ -1,13 +1,11 @@
-
+#const n=7. 
 #hide.
 #show succ/4. 
 #show size/3. 
 #show corner/1. 
-#show reached/1. 
+#show reached/2. 
 #show ring/3. 
 #show ring_reached/2. 
-#show first/2. 
-#show triangle/3. 
 
 %basics
 box(1 .. n). 
@@ -43,8 +41,8 @@ size(up,e,L) :- rectangle(R,L), size(right,e,R).
 %helpers and projections
 succ(D,X,Y) :- succ(D,X,Y,_).
 succ(X,Y) :- succ(_,X,Y).
-conn(X,Y) :- succ(X,Y).
-conn(Y,X) :- succ(X,Y).
+con(X,Y) :- succ(X,Y). 
+con(Y,X) :- succ(X,Y). 
 
 % cycle free
 reached(X,Y) :- succ(X,Y), box(X;Y). 
@@ -60,31 +58,31 @@ corner(X) :- succ(up,e,X), succ(right,e,X).
 % all nodes are reachable from lower left
 :- box(Y), corner(X), X != Y, not reached(X,Y). 
 
-% the interior is triangular 
-%triangle(X,Y,Z) :- succ(A,X,Y), succ(B,X,Z), succ(C,Y,Z), box(Y), A != C. 
-%:- triangle(X,Y,Z), succ(up,X,Y,0).
-%:- triangle(X,Y,Z), succ(up,Y,Z,0).
+% on side, standard
+ring(X,Y,Z) :- succ(right,X,Y), succ(right,X,Z), succ(up,Y,Z). 
+ring(X,Y,Z) :- succ(up,X,Y), succ(up,X,Z), succ(right,Z,Y). 
+ring(X,Y,Z) :- succ(right,X,Y), succ(up,X,Z), succ(up,Y,Z). 
+ring(X,Y,Z) :- succ(right,X,Y), succ(up,X,Z), succ(right,Z,Y). 
+%ring(X,Y,Z) :- succ(X,Y), succ(X,Z), succ(Y,Z). 
+%:- succ(right,X,Y), succ(up,X,Z), succ(up,Z,Y). 
+%:- succ(right,X,Y), succ(up,X,Z), succ(right,Z,Y). 
+ring(Y,Z,X) :- ring(X,Y,Z). % genious!
 
-%:- obj(X), succ(X,Y), not 2 { triangle(X,Y,Z), triangle(X,Z,Y), triangle(Z,X,Y) } 2. 
+% the ring is unique!
+:- con(X,Y), 2 { ring(X,Y,Z) }.
 
-has_smaller(X,Y) :- conn(X,Y), conn(X,Z), Y > Z. 
-first(X,Y) :- conn(X,Y), not has_smaller(X,Y). 
-
-ring(X,Y,Z) :- conn(X,Y), conn(Y,Z), conn(X,Z). 
-
-ring_reached(X,Y) :- conn(X,Y), not has_smaller(X,Y). 
+% choose a unique element 
+has_smaller(X,Y) :- con(X,Y), con(X,Z), Z < Y. 
+ring_reached(X,Y) :- con(X,Y), not has_smaller(X,Y). 
 ring_reached(X,Z) :- ring_reached(X,Y), ring(X,Y,Z). 
 
-%:- obj(X), 2 [ first(X,_) ]. 
-:- conn(X,Y), 3 { ring(X,Y,_) }. 
-:- conn(X,Y), not ring_reached(X,Y). 
+:- con(X,Y), not ring_reached(X,Y). 
 
 % EULER: e = 3v - 6 for maximally planar graphs
-%s(N) :- N = (3*(n+1)) - 6. 
-%:- s(S), not S  [succ(_,_) ] S.
+count(X,Y) :- succ(X,Y), box(Y).
+count(X,e) :- succ(X,e), not succ(e,X). 
+s(N) :- N = (3*(n+1)) - 6. 
+:- s(S), not S  [count(_,_) ] S.
 
-% symmetry: fix order of n*n+1 and (n+1)*(n+2) blocks. 
-%:- size(D,X,X+1), size(D,X+1,X+1), succ(D,X+1,X,X+1). 
-
-% no shortcuts
-%:- box(X;Y;Z), succ(D,X,Y), succ(D,Y,Z), succ(D,X,Z). 
+%  symmetry: fix order of n*n+1 and (n+1)*(n+2) blocks. 
+%:- box(X), box(X+1), size(D,X,X+1), size(D,X+1,X+1), succ(D,X+1,X,X+1). 
