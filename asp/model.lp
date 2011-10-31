@@ -85,4 +85,5 @@ s(N) :- N = (3*(n+1)) - 6.
 :- s(S), not S  [count(_,_) ] S.
 
 %  symmetry: fix order of n*n+1 and (n+1)*(n+2) blocks. 
-%:- box(X), box(X+1), size(D,X,X+1), size(D,X+1,X+1), succ(D,X+1,X,X+1). 
+%next(X,X+1) :- box(X;X+1). 
+%:- next(X,X+1), size(D,X,X+1), size(D,X+1,X+1), succ(D,X+1,X,X+1). 
