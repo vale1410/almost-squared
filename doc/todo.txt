@@ -9,9 +9,6 @@ workflow:
 
 references: 
 * rectangular dual
-** A theory of rectangular dual graphs  (1990)
-** Rectangle and Square Representations of Planar Graphs (submitted ... 2011?) 
-** A linear algorithm to find a rectangular dual of a planar triangulated graph (1986)
 * cp
 * asp
 * rectangular packing

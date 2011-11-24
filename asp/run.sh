@@ -1,6 +1,7 @@
 #!/bin/bash
 
-Option='--threads 4 --stat '
+#Option='--threads 4 --stat '
+Option='--stat '
 
 Strategy=$2
 case $Strategy in
@@ -35,4 +36,4 @@ esac
 
 echo new try instance $1 >> output.txt
 echo configuration: $Option    >> output.txt
-gringo model.lp --const n=$1 | timeout $3 clasp #$Option >> output.txt 
+gringo model.lp --const n=$1 | clasp --time-limit=$3 $Option | tee output.txt 

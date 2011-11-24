@@ -1,4 +1,4 @@
-#const n=7. 
+#const n=5. 
 #hide.
 #show succ/4. 
 #show size/3. 
@@ -15,8 +15,9 @@ obj(X) :- box(X).
 min(X,Y,X) :- box(X;Y), X < Y. 
 min(X,Y,Y) :- box(X;Y), X > Y. 
 
-% choice for boxes, and how much do they allign. 
-{ succ(right,X,Y,1 .. S+1), succ(up,X,Y,0 .. S+1) } 1 :- min(X,Y,S).  % semantics of 0 = diagonal lower left to upper right 
+% choice for rectangles, and how much do they allign. 
+{ succ(right,X,Y,1 .. S+1), succ(up,X,Y,0 .. S+1) } 1 :- 
+        min(X,Y,S).  % semantics of 0 = diagonal lower left to upper right 
 
 %choose if box is sideways or up
 1 { size(right,X,X), size(right,X,X+1) } 1 :- box(X).
@@ -63,10 +64,8 @@ ring(X,Y,Z) :- succ(right,X,Y), succ(right,X,Z), succ(up,Y,Z).
 ring(X,Y,Z) :- succ(up,X,Y), succ(up,X,Z), succ(right,Z,Y). 
 ring(X,Y,Z) :- succ(right,X,Y), succ(up,X,Z), succ(up,Y,Z). 
 ring(X,Y,Z) :- succ(right,X,Y), succ(up,X,Z), succ(right,Z,Y). 
-%ring(X,Y,Z) :- succ(X,Y), succ(X,Z), succ(Y,Z). 
-%:- succ(right,X,Y), succ(up,X,Z), succ(up,Z,Y). 
-%:- succ(right,X,Y), succ(up,X,Z), succ(right,Z,Y). 
-ring(Y,Z,X) :- ring(X,Y,Z). % genious!
+
+ring(Y,Z,X) :- ring(X,Y,Z). 
 
 % the ring is unique!
 :- con(X,Y), 2 { ring(X,Y,Z) }.
@@ -84,6 +83,6 @@ count(X,e) :- succ(X,e), not succ(e,X).
 s(N) :- N = (3*(n+1)) - 6. 
 :- s(S), not S  [count(_,_) ] S.
 
-%  symmetry: fix order of n*n+1 and (n+1)*(n+2) blocks. 
+%% symmetry: fix order of n*n+1 and (n+1)*(n+2) blocks. 
 %next(X,X+1) :- box(X;X+1). 
 %:- next(X,X+1), size(D,X,X+1), size(D,X+1,X+1), succ(D,X+1,X,X+1). 
